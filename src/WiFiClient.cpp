@@ -110,7 +110,10 @@ int WiFiClient::available() {
       uint8_t b;
       int numread = ::read(psock, &b, 1);
       if (numread < 1) {
-        errorCode = errno;
+        if (numread == 0) // EOF
+          errorCode = ECONNRESET;
+        else
+          errorCode = errno;
         // EAGAIN means timeout
         if (errorCode == EAGAIN)
           errorCode = 0;
