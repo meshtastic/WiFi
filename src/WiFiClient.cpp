@@ -130,7 +130,14 @@ size_t WiFiClient::write(const uint8_t *buf, size_t size) {
     return 0;
   }
 
-  return ::write(psock, buf, size);
+  auto ret = ::write(psock, buf, size);
+  if (ret == -1) {
+    if (errno)
+      errorCode = errno;
+    else
+      errorCode = ECONNRESET;
+  }
+  return ret;
 }
 
 int WiFiClient::available() {
