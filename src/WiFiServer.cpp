@@ -20,8 +20,14 @@
 #include <string.h>
 #include <signal.h>
 
-extern "C" {
+// logging.h declares `arduino::log(...)` (C++ namespace). Must NOT live inside
+// `extern "C"` — on Apple Clang that gives the C++ declaration C linkage and
+// later collides with libc's `extern double log(double)` from <math.h>
+// (pulled transitively from Arduino.h -> <memory>). Linux GCC is tolerant of
+// this misuse but Clang isn't.
 #include "logging.h"
+
+extern "C" {
 #include "utility/debug.h"
 #include "utility/wifi_spi.h"
 }
