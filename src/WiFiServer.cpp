@@ -96,7 +96,6 @@ void WiFiServer::begin() {
 WiFiClient WiFiServer::available(byte *status) {
 
   assert(psock);
-  log(SysWifi, LogVerbose, "calling accept");
 
   struct sockaddr_in cli_addr;
   socklen_t clilen = sizeof(cli_addr);
@@ -112,8 +111,6 @@ WiFiClient WiFiServer::available(byte *status) {
       portduinoCheckNotNeg(s, "accept failed");
     }
   }
-
-  log(SysWifi, LogVerbose, "accept=%d", s);
 
   return WiFiClient(s);
 }
